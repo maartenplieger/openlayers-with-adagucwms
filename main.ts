@@ -52,6 +52,12 @@ const layerwidth = Math.round((layerBbox[2] - layerBbox[0]) / 2000);
 const layerHeight = Math.round((layerBbox[3] - layerBbox[1]) / 2000);
 const layerCrs = "EPSG:32661";
 
+const harmonieWmsURL =
+  "https://geoservices.knmi.nl/adaguc-server?DATASET=uwcw_ha43_dini_5p5km&";
+const layerToFind = "air_temperature_hagl";
+const wmsCombinedlayers =
+  "air_temperature_hagl,total_precipitation_rate_hagl,air_pressure_at_mean_sea_level_hagl";
+
 const olLayerProjection = new Projection({
   code: layerCrs,
   units: "m",
@@ -68,12 +74,10 @@ const makeHarmonieWMSRequest = (layer: WMLayer): string => {
   const getMapProjection = `WIDTH=${layerwidth}&HEIGHT=${layerHeight}&CRS=${layerCrs}&BBOX=${layerBbox.join(
     ","
   )}`;
-  const layers =
-    "air_temperature_hagl,total_precipitation_rate_hagl,air_pressure_at_mean_sea_level_hagl";
 
   const dimensions = getMapDimURL(layer);
 
-  return `${layer.service}&service=WMS&REQUEST=GetMap&LAYERS=${layers}&${getMapProjection}&STYLES=temperature_wow%2Fshaded,pressure_cwk%2Fcontour&FORMAT=image/png&TRANSPARENT=TRUE&${dimensions}`;
+  return `${layer.service}&service=WMS&REQUEST=GetMap&LAYERS=${wmsCombinedlayers}&${getMapProjection}&STYLES=temperature_wow%2Fshaded,pressure_cwk%2Fcontour&FORMAT=image/webp&TRANSPARENT=TRUE&${dimensions}`;
 };
 
 const overLayer = new ImageLayer({
@@ -144,10 +148,7 @@ const setOpenLayersLayer = (wmLayer: WMLayer) => {
 };
 
 const initHarmonieWMS = async () => {
-  const wmsURL =
-    "https://geoservices.knmi.nl/adaguc-server?DATASET=uwcw_ha43_dini_5p5km&";
-  const layerToFind = "air_temperature_hagl";
-  const wmService = WMGetServiceFromStore(wmsURL);
+  const wmService = WMGetServiceFromStore(harmonieWmsURL);
   const getLayer = (): Promise<LayerProps> => {
     return new Promise((resolve, reject) => {
       wmService.getLayerObjectsFlat(
@@ -172,14 +173,14 @@ const initHarmonieWMS = async () => {
   const layerProps = await getLayer();
   const wmLayer = new WMLayer({
     id: generateLayerId(),
-    service: wmsURL,
+    service: harmonieWmsURL,
     layerType: LayerType.mapLayer,
     ...layerProps,
     name: layerToFind,
   });
 
   const layerTimeDim = wmLayer.getDimension("time");
-  for (let j = 0; j < layerTimeDim!.size(); j += 1) {
+  for (let j = 0; j < layerTimeDim!.size() - 1; j += 1) {
     if (!layerTimeDim) return;
     const currentTimeStep = layerTimeDim.getIndexForValue(
       layerTimeDim.currentValue
