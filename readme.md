@@ -14,7 +14,9 @@ Check my-app/main.ts for the details
 
 ## To run:
 
+```
 npm ci
 npm start
+```
 
 visit the advertised urls
