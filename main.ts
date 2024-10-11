@@ -180,7 +180,7 @@ const initHarmonieWMS = async () => {
   });
 
   const layerTimeDim = wmLayer.getDimension("time");
-  for (let j = 0; j < layerTimeDim!.size() - 1; j += 1) {
+  for (let j = 0; j < 40; j += 1) {
     if (!layerTimeDim) return;
     const currentTimeStep = layerTimeDim.getIndexForValue(
       layerTimeDim.currentValue
