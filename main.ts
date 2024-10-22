@@ -23,22 +23,23 @@ import {
   WMDateTooEarlyString,
 } from "@opengeoweb/webmap";
 
+/*
+// Enable the following lines to allow to do a browser based geographical projection
+ 
 proj4.defs(
   "EPSG:32661",
   "+proj=stere +lat_0=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs +type=crs"
 );
-
 proj4.defs(
   "EPSG:3857",
   "+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs"
 );
-
 register(proj4);
-
 const proj32661 = getProjection("EPSG:32661");
 proj32661!.setExtent([
   -569491.1035575261, -4370824.966741579, 3999635.796053254, 436331.1937775784,
 ]);
+*/
 
 // // Do layer GetMap Requests in mercator projection
 // const layerBbox = [-3000000, 5000000, 2000000, 9000000];
@@ -47,10 +48,16 @@ proj32661!.setExtent([
 // const layerCrs = "EPSG:3857";
 
 // Do layer GetMap Requests in europe stereographic projection
-const layerBbox = [-530000, -4000000, 4000000, 15000];
+// const layerBbox = [-530000, -4000000, 4000000, 15000];
+// const layerwidth = Math.round((layerBbox[2] - layerBbox[0]) / 2000);
+// const layerHeight = Math.round((layerBbox[3] - layerBbox[1]) / 2000);
+// const layerCrs = "EPSG:32661";
+
+// // Do layer GetMap Requests in mercator projection for smaller domain
+const layerBbox = [-800000, 5750000, 2200000, 8600000];
 const layerwidth = Math.round((layerBbox[2] - layerBbox[0]) / 2000);
 const layerHeight = Math.round((layerBbox[3] - layerBbox[1]) / 2000);
-const layerCrs = "EPSG:32661";
+const layerCrs = "EPSG:3857";
 
 const harmonieWmsURL =
   "https://geoservices.knmi.nl/adaguc-server?DATASET=uwcw_ha43_dini_5p5km&";
