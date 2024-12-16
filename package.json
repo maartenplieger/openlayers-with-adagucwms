@@ -11,6 +11,6 @@
   },
   "dependencies": {
     "ol": "latest",
-    "@opengeoweb/webmap":"9.28.1"
+    "@opengeoweb/webmap":"9.36.0"
   }
 }
